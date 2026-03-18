@@ -102,14 +102,19 @@ chmod +x dst_tool.sh
 
 ### 主界面
 <img width="931" height="558" alt="image" src="https://github.com/user-attachments/assets/27dc8606-b18a-4d9e-9901-df6d2e2a6f88" />
+
 ### 内置控制台
 <img width="912" height="362" alt="image" src="https://github.com/user-attachments/assets/704da190-b081-4a60-966a-b592bdf5f9e4" />
+
 ### mod管理
 <img width="624" height="320" alt="image" src="https://github.com/user-attachments/assets/b9a74485-e0a4-43d5-9289-ea9f4b4dcdd7" />
+
 ### 活动控制
 <img width="796" height="682" alt="image" src="https://github.com/user-attachments/assets/c718318a-e6e8-4e80-91d4-134fe5914a25" />
+
 ### 自动扫描配置
 <img width="625" height="274" alt="image" src="https://github.com/user-attachments/assets/39ed8626-901e-4f96-bf44-a4d01a7185e2" />
+
 
 
 
