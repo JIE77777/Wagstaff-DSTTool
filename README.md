@@ -49,11 +49,11 @@ cd Wagstaff-DSTTool
 
 ```bash
 chmod +x dst_tool.sh
-./dst_tool.sh --init
 ./dst_tool.sh
 ```
 
-`--init` 会自动扫描目录并把配置写回脚本顶部 `CFG_*` 区块。
+首次运行会自动进入初始化向导，并把配置写回脚本顶部 `CFG_*` 区块。  
+如需手动重跑初始化，可执行：`./dst_tool.sh --init`
 
 ### 方式 2：外部托管（systemd/supervisor/docker/其他）
 
