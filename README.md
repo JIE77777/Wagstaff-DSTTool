@@ -19,6 +19,30 @@
 - `screen`（仅 `screen` 模式启停需要）
 - `steamcmd`（更新游戏与下载 Mod 需要）
 
+## 下载方式
+
+仓库地址：`https://github.com/JIE77777/Wagstaff-DSTTool`
+
+
+### 方式 1：wget 下载单文件脚本
+
+```bash
+wget -O dst_tool.sh https://raw.githubusercontent.com/JIE77777/Wagstaff-DSTTool/main/dst_tool.sh
+```
+
+### 方式 2：curl 下载单文件脚本
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/JIE77777/Wagstaff-DSTTool/main/dst_tool.sh -o dst_tool.sh
+```
+
+### 方式 3：Git 克隆仓库
+
+```bash
+git clone https://github.com/JIE77777/Wagstaff-DSTTool.git
+cd Wagstaff-DSTTool
+```
+
 ## 部署方式
 
 ### 方式 1：直接部署（推荐）
