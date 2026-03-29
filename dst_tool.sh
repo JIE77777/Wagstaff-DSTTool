@@ -1,7 +1,22 @@
 #!/bin/bash
-# DST Dedicated Server Tool
-# Release: v6.9
-# Single-file management script for Don't Starve Together dedicated server.
+# DST Tool
+# Version: v6.10
+# Changelog:
+# - 集成 start.sh 启动逻辑到单脚本
+# - 启动流程不再依赖外部 start.sh
+# - 启停逻辑增加外部托管进程提示
+# - Mod 名称解析支持自动扫描 ugc_mods 路径
+# - 内置初始化向导，支持单文件内嵌配置写回
+# - 去除 .dst_tool.conf 兼容，仅保留单文件配置
+# - 外部托管下支持按分片显示运行状态
+# - 配置区拆分为最小/高级两块
+# - 新增内置说明（--help + 菜单查看）
+# - 脚本自生命令独立为“脚本工具”子菜单
+# - 清理内嵌配置为通用默认值（便于跨环境初始化）
+# - 首次运行自动初始化（单文件内嵌标记）
+# - 修复 Mod 添加/启用时安装层与启用层可能不同步的问题
+# - 启用 Mod 时自动补齐 setup.lua，避免只写 modoverrides.lua
+# - 修复未运行时提示函数返回非 0 导致误报“无效”
 
 # ================= 配置区域 =================
 # 最小手动配置（第一次使用只改这 4 项）
@@ -25,7 +40,7 @@ BACKUP_REPO="$CFG_BACKUP_REPO"
 SERVICE_MODE="$CFG_SERVICE_MODE" # screen / external
 SCREEN_MASTER_NAME="$CFG_SCREEN_MASTER_NAME"
 SCREEN_CAVES_NAME="$CFG_SCREEN_CAVES_NAME"
-SCRIPT_VERSION="v6.9"
+SCRIPT_VERSION="v6.10"
 
 DST_BIN_DIR=""
 DST_EXEC=""
@@ -852,7 +867,18 @@ add_setup_entry() {
     ensure_mod_files
     mod_has_setup_entry "$modid" && return 1
     echo "ServerModSetup(\"$modid\")" >> "$MOD_SETUP_FILE"
-    return 0
+    mod_has_setup_entry "$modid"
+}
+
+ensure_mod_install_entry() {
+    local modid="$1"
+    mod_has_setup_entry "$modid" && return 0
+    if add_setup_entry "$modid"; then
+        echo -e "${GREEN}✅ 已补齐安装层: workshop-$modid${NC}"
+        return 0
+    fi
+    echo -e "${RED}❌ setup.lua 写入失败: workshop-$modid${NC}"
+    return 1
 }
 
 remove_setup_entry() {
@@ -871,6 +897,7 @@ remove_mod_override() { [ -f "$1" ] && sed -i "/\\[\"workshop-$2\"\\][[:space:]]
 
 notify_mod_restart_hint() {
     cluster_process_running && echo -e "${YELLOW}ℹ️ Mod 变更需重启服务器后生效。${NC}"
+    return 0
 }
 
 snapshot_mod_files() {
@@ -914,19 +941,23 @@ download_missing_install_mods() {
 
 add_mod_core() {
     local modid="$1"
-    add_setup_entry "$modid"
+    ensure_mod_files
+    ensure_mod_install_entry "$modid" || return 1
     insert_mod_override "$MOD_OVERRIDE_MASTER" "$modid"
     insert_mod_override "$MOD_OVERRIDE_CAVES" "$modid"
     download_mod "$modid"
+    echo -e "${GREEN}✅ 已添加并启用: workshop-$modid${NC}"
     notify_mod_restart_hint
 }
 
 enable_mod_core() {
     local modid="$1"
+    ensure_mod_files
+    ensure_mod_install_entry "$modid" || return 1
     insert_mod_override "$MOD_OVERRIDE_MASTER" "$modid"
     insert_mod_override "$MOD_OVERRIDE_CAVES" "$modid"
     echo -e "${GREEN}✅ 已启用: workshop-$modid${NC}"
-    mod_has_setup_entry "$modid" || echo -e "${YELLOW}⚠️ 该 Mod 不在 setup.lua 中，建议补齐。${NC}"
+    notify_mod_restart_hint
 }
 
 disable_mod_core() {
