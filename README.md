@@ -100,6 +100,7 @@ chmod +x dst_tool.sh
 - `external` 模式下，启停请使用你自己的托管系统。
 - 若状态识别异常，先确认 `CFG_SAVE_DIR_NAME` 是否与实际启动参数 `-cluster` 一致。
 
+
 ### 主界面
 <img width="931" height="558" alt="image" src="https://github.com/user-attachments/assets/27dc8606-b18a-4d9e-9901-df6d2e2a6f88" />
 
